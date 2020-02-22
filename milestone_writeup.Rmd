@@ -1,0 +1,12 @@
+---
+title: "Milestone 3 Writeup"
+author: "Mike Silva"
+date: "2/21/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This paper argues that one of the main reasons marriages with similar poltical ideologies between the couple are successful is because of interest in body odor. The authors look into science behind our five sense and the power that smell has over others, the correlations between body odor and political ideologies, and an experiment studying people's perceptions of attractiveness in body odor. Their findings show that individuals enjoy the body odors of others that share the same political ideology as they do. This implies that detecting whether someone is politically aligned with oneself heavily relies on their attraction to that person. 
