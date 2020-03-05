@@ -1,0 +1,49 @@
+---
+title: "Milestone 4"
+author: "Mike Silva"
+date: "3/3/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(bookdown)
+library(tinytex)
+library(gt)
+library(gtsummary)
+library(stargazer)
+library(knitr)
+
+
+pdf_document2()
+```
+
+I am learning from Neil Schrage's code in his public repository in order to complete this milestone.^[this is an example of a footnote.I understand how to do this part, but I struggle with the overall setup of everything going on.]
+
+I am replicating ["Assortative Mating on Ideology Could Operate Through Olfactory Cues"](https://onlinelibrary.wiley.com/doi/abs/10.1111/ajps.12133, by Rose McDermott, Dustin Tingley, and Peter K. Hatemi. This is a citation of the paper. @paper @paper1  
+
+Here is an example of a table made using GT:
+
+```{r gt, echo = FALSE}
+x1 <- data.frame(a = sample(1:30, 10), b = sample(1:30, 10), c = sample(1:30, 10)) 
+gt(x1) 
+# kable(x = data.1, caption = "A Simple Table", position = "!h")
+```
+
+
+Here is an example of a regression table made using GT Summary:
+
+```{r regression, echo=FALSE}
+x2 <- data.frame(a = sample(1:30, 10), b = sample(1:30, 10), c = sample(1:30, 10))
+fit_1 <- lm(x1$b ~ x2$a) 
+
+table1 <- tbl_regression(fit_1) 
+table1
+```
+
+
+Selected Bibliography + References: 
+    
+@paper1
