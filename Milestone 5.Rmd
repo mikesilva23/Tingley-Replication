@@ -1,0 +1,54 @@
+---
+title: "Milestone 5"
+author: "Mike Silva"
+date: "4/4/2020"
+output: pdf_document
+bibliography: 1006replicationbib.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+```
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(foreign)
+library(rstanarm)
+```
+
+```{r, warning=FALSE, message=FALSE}
+x <- read.dta("AJPSReplication.dta")
+
+graphic <- 
+  x %>% 
+  sample_n(21) %>% 
+  drop_na() %>% 
+  ggplot(aes(MaleTarget)) + geom_histogram(stat = "count") + 
+  scale_y_continuous(breaks = c(5,10)) +
+  labs(title = "Target Sex", x = "", y = "Frequency", caption = "This graph illustrates the targeted sexes of the particpants. This is taken from a random sample of 21 participants.") 
+
+graphic
+```
+
+```{r}
+model1<- 
+  x %>% 
+  mutate(IdeoTargetBinary = ifelse(IdeoTarget >= 4, 1, 0),
+         IdeoEvalBinary = ifelse(politicalIdeo >= 4, 1, 0),
+         mn_attractive_eval = mean(attractive),
+         same_ideology = IdeoTargetBinary == IdeoEvalBinary,
+         same_gender = Male == MaleTarget) %>% 
+  stan_glm()
+  
+```
+
+
+
+Selected Bibliography + References: 
+
+@AlfordJohn
+@Bereczkei
+@BlausteinAndrew
+@ByrneD
+@paper1
+
