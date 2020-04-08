@@ -50,24 +50,34 @@ graphic <-
 graphic
 ```
 
+
+**Appendix**
+
 ```{r, results='asis'}
 model1 <-
-  stan_glm(attractive ~ IdeoEvalBinary + IdeoTargetBinary + same_gender + same_ideology + Male + MaleTarget +  mn_attractive + mn_attractive_eval2, data = x, refresh = 0)
+  lm(attractive ~ IdeoEvalBinary + IdeoTargetBinary + same_gender + same_ideology + Male + MaleTarget +  mn_attractive + mn_attractive_eval2, data = x)
 
 
 model2<-
-  stan_glm(attractive ~ politicalIdeo + IdeoTarget + ideodiffabs + Male + MaleTarget + same_gender + mn_attractive + mn_attractive_eval2, data = x, refresh = 0)
+  lm(attractive ~ politicalIdeo + IdeoTarget + ideodiffabs + Male + MaleTarget + same_gender + mn_attractive + mn_attractive_eval2, data = x)
 
 model3 <-
-  stan_glm(attractive ~ ideodiffabs + same_gender, data = x, refresh = 0)
+  lm(attractive ~ ideodiffabs + same_gender, data = x)
 
 
-stargazer(data.frame(model1), data.frame(model2), data.frame(model3), style = "ajps", type = "latex", omit.summary.stat = c("max", "min", "p25", "p75", "n"), title = "Odor Attraction as a Function of Ideological Similarity", column.sep.width = "20pt", font.size = "Large", intercept.bottom = T, dep.var.labels.include = T)
+stargazer(model1, model2, model3, header = FALSE, style = "ajps", type = "latex", omit.summary.stat = c("max", "min", "p25", "p75", "n"), title = "Odor Attraction as a Function of Ideological Similarity", intercept.bottom = T, dep.var.labels.include = T, digits = 4)
 
 
 ```
 
+![Table from Article](~/Desktop/Gov 1006/replication_1006/images/Screen Shot 2020-04-07 at 9.48.20 PM.png)
 
+
+
+
+**Extension**
+
+For my extension, I plan to see if ideology plays a role in finding targets more or less attractive. Through this experiment we saw how subjects are more likely to find members of their ideology attractive as opposed to the opposite ideology, but what if liberals are simply more likely to find everyone more attractive or conservatives are less likely to find other attractive in general? Obviously all humans naurally find others attractive, but does one ideology's culture create a more open-minded person than the other? In order to study this, I will regress the attractive variable on the target's binary ideology interacting with the evaluators binary ideology. The results will illustrate the measure of attractiveness for each evaluator's ideology on each target's ideology. These results will allow us to see how each ideology consistently rates the targets.  
 
 Selected Bibliography + References: 
 
