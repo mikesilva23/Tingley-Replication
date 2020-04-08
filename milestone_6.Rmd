@@ -69,10 +69,10 @@ stargazer(model1, model2, model3, header = FALSE, style = "ajps", type = "latex"
 
 
 ```
+![Table in Article](~/Desktop/Gov 1006/replication_1006/images/Screen Shot 2020-04-07 at 9.48.20 PM.png)
 
-![Table from Article](~/Desktop/Gov 1006/replication_1006/images/Screen Shot 2020-04-07 at 9.48.20 PM.png)
 
-
+In this replication, I was able to replicate almost everything identically. The numbers are slightly off in some cases. The biggest issue I have is with model 3. This is because the authors cluster two variables together, and I haven't been able to translate this into R smoothly. I tried regressing those variables using as.factor(), but that appears to mess up the entire table. Overall, I believe that the small differences in standard error values are because the authors cluster the standard errors, and I haven't been able to replicate this. 
 
 
 **Extension**
