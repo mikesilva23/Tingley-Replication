@@ -57,8 +57,7 @@ model1 <-
 model3 <-
   stan_glm(attractive ~ ideodiffabs + same_gender, data = x, refresh = 0)
 
-
-stargazer(data.frame(model1), data.frame(model3), style = "ajps", type = "latex", omit.summary.stat = c("max", "min", "p25", "p75", "n"), title = "Odor Attraction as a Function of Ideological Similarity", column.sep.width = "20pt", font.size = "Large" )
+stargazer(data.frame(model1), data.frame(model3)), style = "ajps", type = "latex", omit.summary.stat = c("max", "min", "p25", "p75", "n"), title = "Odor Attraction as a Function of Ideological Similarity", column.sep.width = "20pt", font.size = "Large" )
 
 
 ```
