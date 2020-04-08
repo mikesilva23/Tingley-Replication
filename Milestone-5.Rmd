@@ -54,10 +54,15 @@ graphic
 model1 <-
   stan_glm(attractive ~ IdeoEvalBinary + IdeoTargetBinary + same_gender + same_ideology + Male + MaleTarget +  mn_attractive + mn_attractive_eval2, data = x, refresh = 0)
 
+
+model2<-
+  stan_glm(attractive ~ politicalIdeo + IdeoTarget + ideodiffabs + Male + MaleTarget + same_gender + mn_attractive + mn_attractive_eval2, data = x, refresh = 0)
+
 model3 <-
   stan_glm(attractive ~ ideodiffabs + same_gender, data = x, refresh = 0)
 
-stargazer(data.frame(model1), data.frame(model3)), style = "ajps", type = "latex", omit.summary.stat = c("max", "min", "p25", "p75", "n"), title = "Odor Attraction as a Function of Ideological Similarity", column.sep.width = "20pt", font.size = "Large" )
+
+stargazer(data.frame(model1), data.frame(model2), data.frame(model3), style = "ajps", type = "latex", omit.summary.stat = c("max", "min", "p25", "p75", "n"), title = "Odor Attraction as a Function of Ideological Similarity", column.sep.width = "20pt", font.size = "Large", intercept.bottom = T, dep.var.labels.include = T)
 
 
 ```
