@@ -1,7 +1,7 @@
 ---
-title: "Milestone 6"
+title: "Rough Draft"
 author: "Mike Silva"
-date: "4/8/2020"
+date: "4/14/2020"
 output: pdf_document
 bibliography: 1006replicationbib.bib
 ---
@@ -51,6 +51,7 @@ graphic
 ```
 
 
+
 **Appendix**
 
 ```{r, results='asis'}
@@ -72,18 +73,23 @@ stargazer(model1, model2, model3, header = FALSE, style = "ajps", type = "latex"
 
 
 
-In this replication, I was able to replicate almost everything identically. The numbers are slightly off in some cases. The biggest issue I have is with model 3. This is because the authors cluster two variables together, and I haven't been able to translate this into R smoothly. I tried regressing those variables using as.factor(), but that appears to mess up the entire table. Overall, I believe that the small differences in standard error values are because the authors cluster the standard errors, and I haven't been able to replicate this. 
-
 
 **Extension**
 
 For my extension, I plan to see if ideology plays a role in finding targets more or less attractive. Through this experiment we saw how subjects are more likely to find members of their ideology attractive as opposed to the opposite ideology, but what if liberals are simply more likely to find everyone more attractive or conservatives are less likely to find other attractive in general? Obviously all humans naurally find others attractive, but does one ideology's culture create a more open-minded person than the other? In order to study this, I will regress the attractive variable on the target's binary ideology interacting with the evaluators binary ideology. The results will illustrate the measure of attractiveness for each evaluator's ideology on each target's ideology. These results will allow us to see how each ideology consistently rates the targets.  
 
-Selected Bibliography + References: 
+
+
+**Selected Bibliography + References:** 
+
 
 @AlfordJohn
+
 @Bereczkei
+
 @BlausteinAndrew
+
 @ByrneD
+
 @paper1
 
