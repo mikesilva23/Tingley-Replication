@@ -99,6 +99,8 @@ stargazer(model1, model2, model3, header = FALSE, style = "ajps", type = "latex"
 
 ## Extension
 
+Pictured below is a graph of predicted outcomes from a posterior distribution of one model created by Tingley et al combined with the actual outcome data from the model. 
+
 ```{r Extension}
 stan_fit <-
   stan_lm(attractive ~ same_ideology + same_gender + IdeoEvalBinary + IdeoTargetBinary + Male + MaleTarget +  mn_attractive + mn_attractive_eval2, data = x, prior = NULL)
@@ -110,8 +112,10 @@ predict_graphic <-
 predict_graphic
 ```
 
+Through this graph, we can see how well the data explains the outcome we are looking at in our model, which is the measure of attractiveness of the subjects. The dark blue line illustrates the actual outcomes of the model. As you can see, there is a lot of fluctuation between each value. This is because the observers only graded on a whole number scale. The peaks in each hump represent each value- there are 7 peaks that coordinate to each of the 'attractive' values. The faded blue line refers to the posterior iterations ran using pp_check that predicts outcomes using the information in our model. 
 
-For my extension, I plan to see if ideology plays a role in finding targets more or less attractive. Through this experiment we saw how subjects are more likely to find members of their ideology attractive as opposed to the opposite ideology, but what if liberals are simply more likely to find everyone more attractive or conservatives are less likely to find other attractive in general? Obviously all humans naurally find others attractive, but does one ideology's culture create a more open-minded person than the other? In order to study this, I will regress the attractive variable on the target's binary ideology interacting with the evaluators binary ideology. The results will illustrate the measure of attractiveness for each evaluator's ideology on each target's ideology. These results will allow us to see how each ideology consistently rates the targets.  
+Through this graph we can confidently say that our model significantly explains the data. In most cases the predicted values align closesly with the outcome variables, emphasizing how the model is representative of the data. In a the cases of attractive values 1, 4, and 5, the predicted values underestimated compared to the actual values. This may be because there is less data for those values, so the prediction is less accurate. Regardless, this graph confirms the accuracy and significance of the model created by Tingley et al. 
+
 
 
 
