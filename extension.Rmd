@@ -1,0 +1,74 @@
+---
+title: "Extension"
+author: "Mike Silva"
+date: "4/16/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(foreign)
+library(rstanarm)
+library(stargazer)
+library(generics)
+library(tidybayes)
+library(broom)
+library(modelr)
+
+theme_set(theme_tidybayes())
+``` 
+
+```{r data}
+
+x <- read.dta("AJPSReplication.dta") %>%
+  filter(!is.na(attractive)) %>%
+  mutate(
+    IdeoTargetBinary = ifelse(IdeoTarget >= 4, 1, 0),
+    IdeoEvalBinary = ifelse(politicalIdeo >= 4, 1, 0),
+    mn_attractive_eval = mean(attractive),
+    same_ideology = IdeoTargetBinary == IdeoEvalBinary,
+    same_gender = Male == MaleTarget,
+    ideodiffabs = abs(politicalIdeo - IdeoTarget)
+  )
+
+x <-
+  x %>%
+  group_by(ideval_n) %>%
+  mutate(mn_attractive_eval2 = mean(attractive))
+```
+
+```{r Extension}
+
+
+stan_fit <-
+  stan_lm(attractive ~ same_ideology + same_gender + IdeoEvalBinary + IdeoTargetBinary + Male + MaleTarget +  mn_attractive + mn_attractive_eval2, data = x, prior = NULL)
+
+
+stan_fit %>% 
+tidy() %>% 
+  ggplot(aes(y = term)) +
+  stat_dist_halfeyeh(
+    aes(dist = "student_t", arg1 = df.residual(stan_fit), arg2 = estimate, arg3 = std.error)
+  )
+
+pp_check(stan_fit, "dens_overlay") +
+  labs(x = "Attractive") + 
+  scale_x_continuous()
+  
+```
+
+
+checking how accurate the model is 
+linpred checks the model for you and sees how accurte it is
+
+the peaks are all the integers
+
+tails on the left and right which doesn't make sense because there can't be a negative attractive value
+
+overall it's a good fit
+within the bounds of attractive vlues
+once you leave the bounds of 1-7 it loses its validity 
+
+

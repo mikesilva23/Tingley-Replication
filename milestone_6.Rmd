@@ -51,6 +51,7 @@ graphic
 ```
 
 
+
 **Appendix**
 
 ```{r, results='asis'}
@@ -69,6 +70,7 @@ stargazer(model1, model2, model3, header = FALSE, style = "ajps", type = "latex"
 
 
 ```
+
 
 
 

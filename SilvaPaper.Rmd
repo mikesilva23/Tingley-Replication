@@ -15,6 +15,12 @@ library(tidyverse)
 library(foreign)
 library(rstanarm)
 library(stargazer)
+library(generics)
+library(tidybayes)
+library(broom)
+library(modelr)
+
+theme_set(theme_tidybayes())
 ```
 
 In this paper, Tingley et al. study how olfactory senses connect to assortive mating by ideology in humans. This explains how liberals tend to mate with other liberals, and conservatives tend to mate with other conservatives. The science behind olfactory sensibility in mates is exhibited best in animals, specifically mammals. As the paper explains, smell can signal mate immunocompetence, social compatibility, and other characteristics associated with mate quality and optimal reproduction. Tingley et al. perform a study where they surveyed 146 people on questions regarding the attractiveness of unknown liberals and conservatives. The models created from the survey outlined the affect that ideology and gender had on predicting someone's attractiveness after smelling their odor. They find that there is a positive coefficient for the targets and evaluators having matching ideologies, and a negative coefficient when the ideologies do not align. The coefficients explain the increase or decrease in attractiveness of the subjects. This further leads to a conclusion that olfactory attractiveness is just one of the many ways to explain attraction in mates. Studies have illustrated that characteristics like waist to hip ratio on women and the ability to provide resources in men, along with several other characteristics can also explain attraction in mates. Tingley et al further explain that olfactory attraction is something that is subconscious. Humans don't necessarily set out to smell each other in order to decide whether they're attracted to one another. Rather, our olfactory senses, connected with the parts of our brain that generate emotions, subconsciously tell us that we are interested in someone, and we tend to make those positive connections with members of the same ideology. The data and code used in this analysis replication is available on my github. ^[@github]
@@ -39,7 +45,9 @@ x <-
   x %>%
   group_by(ideval_n) %>%
   mutate(mn_attractive_eval2 = mean(attractive))
+``` 
 
+```{r}
 graphic <-
   x %>%
   sample_n(21, replace = TRUE) %>%
@@ -52,21 +60,36 @@ graphic
 
 
 
-**Appendix**
+## Appendix
 
 ```{r, results='asis'}
 model1 <-
-  lm(attractive ~ IdeoEvalBinary + IdeoTargetBinary + same_gender + same_ideology + Male + MaleTarget +  mn_attractive + mn_attractive_eval2, data = x)
+  lm(attractive ~ same_ideology + same_gender + IdeoEvalBinary + IdeoTargetBinary + Male + MaleTarget +  mn_attractive + mn_attractive_eval2, data = x)
 
 
 model2<-
-  lm(attractive ~ politicalIdeo + IdeoTarget + ideodiffabs + Male + MaleTarget + same_gender + mn_attractive + mn_attractive_eval2, data = x)
+  lm(attractive ~ ideodiffabs + same_gender + politicalIdeo + IdeoTarget + Male + MaleTarget  + mn_attractive + mn_attractive_eval2, data = x)
 
 model3 <-
   lm(attractive ~ ideodiffabs + same_gender, data = x)
 
+labs <- c("Same Ideology", "- Abs Ideology Diff.", "Same Sex", "Conservative Eval.", "Conservative Target","Ideology of Eval.", "Ideology of Target","Male Evaluator","Male Target","Avg. Target Attract","Avg. Eval. Attract")
 
-stargazer(model1, model2, model3, header = FALSE, style = "ajps", type = "latex", omit.summary.stat = c("max", "min", "p25", "p75", "n"), title = "Odor Attraction as a Function of Ideological Similarity", intercept.bottom = T, dep.var.labels.include = T, digits = 4)
+#cluster_se <- function(model, cluster){
+#  if(nrow(model.matrix(model))!=length(cluster)){
+#   stop("check your data: cluster variable has different N than model")}
+#  M <- length(unique(cluster))
+#  N <- length(cluster)          
+#  K <- model$rank  
+#  dfc <- (M/(M - 1)) * ((N - 1)/(N - K))
+#  uj  <- apply(estfun(model), 2, function(x) tapply(x, cluster, sum));
+#  rcse.cov <- dfc * sandwich(model, meat = crossprod(uj)/N)
+#  return(coeftest(model, vcov. = rcse.cov))
+#}
+
+#cluster_se(model1, x$ideval_n)
+
+stargazer(model1, model2, model3, header = FALSE, style = "ajps", type = "latex", omit.stat = c("rsq", "adj.rsq", "ser", "f"), title = "Odor Attraction as a Function of Ideological Similarity", intercept.bottom = T, dep.var.labels.include = F, digits = 4, covariate.labels = labs, dep.var.caption = "")
 
 
 ```
@@ -74,13 +97,25 @@ stargazer(model1, model2, model3, header = FALSE, style = "ajps", type = "latex"
 
 
 
-**Extension**
+## Extension
+
+```{r Extension}
+stan_fit <-
+  stan_lm(attractive ~ same_ideology + same_gender + IdeoEvalBinary + IdeoTargetBinary + Male + MaleTarget +  mn_attractive + mn_attractive_eval2, data = x, prior = NULL)
+
+predict_graphic <- 
+  pp_check(stan_fit, "dens_overlay", seed = 02364) +
+  labs(x = "Attractive") + 
+  scale_x_continuous()
+predict_graphic
+```
+
 
 For my extension, I plan to see if ideology plays a role in finding targets more or less attractive. Through this experiment we saw how subjects are more likely to find members of their ideology attractive as opposed to the opposite ideology, but what if liberals are simply more likely to find everyone more attractive or conservatives are less likely to find other attractive in general? Obviously all humans naurally find others attractive, but does one ideology's culture create a more open-minded person than the other? In order to study this, I will regress the attractive variable on the target's binary ideology interacting with the evaluators binary ideology. The results will illustrate the measure of attractiveness for each evaluator's ideology on each target's ideology. These results will allow us to see how each ideology consistently rates the targets.  
 
 
 
-**Selected Bibliography + References:** 
+## Selected Bibliography + References:
 
 
 @AlfordJohn
