@@ -41,22 +41,40 @@ x <-
 
 ```{r Extension}
 
+set.seed(02364)
 
-stan_fit <-
+stan_fit1 <-
   stan_lm(attractive ~ same_ideology + same_gender + IdeoEvalBinary + IdeoTargetBinary + Male + MaleTarget +  mn_attractive + mn_attractive_eval2, data = x, prior = NULL)
 
+get_variables(stan_fit2)
 
-stan_fit %>% 
-tidy() %>% 
-  ggplot(aes(y = term)) +
-  stat_dist_halfeyeh(
-    aes(dist = "student_t", arg1 = df.residual(stan_fit), arg2 = estimate, arg3 = std.error)
-  )
+stan_fit1 %>% 
+  spread_draws(`(Intercept)`, same_ideologyTRUE)
 
-pp_check(stan_fit, "dens_overlay") +
-  labs(x = "Attractive") + 
-  scale_x_continuous()
-  
+stan1_model <-
+  stan_fit1 %>%
+  spread_draws(same_ideologyTRUE) %>% 
+  ggplot(aes(y = .chain, x = same_ideologyTRUE)) +
+  stat_halfeyeh()
+ 
+stan_fit2 <-
+  stan_lm(attractive ~ ideodiffabs + same_gender + politicalIdeo + IdeoTarget + Male + MaleTarget  + mn_attractive + mn_attractive_eval2, data = x, prior = NULL)
+
+stan2_model <- 
+  stan_fit2 %>%
+  spread_draws(ideodiffabs) %>% 
+  ggplot(aes(y = .chain, x = ideodiffabs)) +
+  stat_halfeyeh()
+
+stan_fit3 <- 
+  stan_lm(attractive ~ ideodiffabs + same_gender, data = x, prior = NULL)
+
+stan3_graphic <- 
+  stan_fit3 %>% 
+  spread_draws(ideodiffabs) %>% 
+  ggplot(aes(y = .chain, x = ideodiffabs)) +
+  stat_halfeyeh()
+
 ```
 
 

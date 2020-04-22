@@ -101,15 +101,40 @@ stargazer(model1, model2, model3, header = FALSE, style = "ajps", type = "latex"
 
 Pictured below is a graph of predicted outcomes from a posterior distribution of one model created by Tingley et al combined with the actual outcome data from the model. 
 
-```{r Extension}
-stan_fit <-
+```{r Extension, include = FALSE}
+set.seed(02364)
+
+stan_fit1 <-
   stan_lm(attractive ~ same_ideology + same_gender + IdeoEvalBinary + IdeoTargetBinary + Male + MaleTarget +  mn_attractive + mn_attractive_eval2, data = x, prior = NULL)
 
-predict_graphic <- 
-  pp_check(stan_fit, "dens_overlay", seed = 02364) +
-  labs(x = "Attractive") + 
-  scale_x_continuous()
-predict_graphic
+get_variables(stan_fit2)
+
+stan_fit1 %>% 
+  spread_draws(`(Intercept)`, same_ideologyTRUE)
+
+stan1_model <-
+  stan_fit1 %>%
+  spread_draws(same_ideologyTRUE) %>% 
+  ggplot(aes(y = .chain, x = same_ideologyTRUE)) +
+  stat_halfeyeh()
+ 
+stan_fit2 <-
+  stan_lm(attractive ~ ideodiffabs + same_gender + politicalIdeo + IdeoTarget + Male + MaleTarget  + mn_attractive + mn_attractive_eval2, data = x, prior = NULL)
+
+stan2_model <- 
+  stan_fit2 %>%
+  spread_draws(ideodiffabs) %>% 
+  ggplot(aes(y = .chain, x = ideodiffabs)) +
+  stat_halfeyeh()
+
+stan_fit3 <- 
+  stan_lm(attractive ~ ideodiffabs + same_gender, data = x, prior = NULL)
+
+stan3_graphic <- 
+  stan_fit3 %>% 
+  spread_draws(ideodiffabs) %>% 
+  ggplot(aes(y = .chain, x = ideodiffabs)) +
+  stat_halfeyeh()
 ```
 
 Through this graph, we can see how well the data explains the outcome we are looking at in our model, which is the measure of attractiveness of the subjects. The dark blue line illustrates the actual outcomes of the model. As you can see, there is a lot of fluctuation between each value. This is because the observers only graded on a whole number scale. The peaks in each hump represent each value- there are 7 peaks that coordinate to each of the 'attractive' values. The faded blue line refers to the posterior iterations ran using pp_check that predicts outcomes using the information in our model. 
