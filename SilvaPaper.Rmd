@@ -19,11 +19,26 @@ library(generics)
 library(tidybayes)
 library(broom)
 library(modelr)
+library(bookdown)
 
 theme_set(theme_tidybayes())
 ```
 
-In this paper, Tingley et al. study how olfactory senses connect to assortive mating by ideology in humans. This explains how liberals tend to mate with other liberals, and conservatives tend to mate with other conservatives. The science behind olfactory sensibility in mates is exhibited best in animals, specifically mammals. As the paper explains, smell can signal mate immunocompetence, social compatibility, and other characteristics associated with mate quality and optimal reproduction. Tingley et al. perform a study where they surveyed 146 people on questions regarding the attractiveness of unknown liberals and conservatives. The models created from the survey outlined the affect that ideology and gender had on predicting someone's attractiveness after smelling their odor. They find that there is a positive coefficient for the targets and evaluators having matching ideologies, and a negative coefficient when the ideologies do not align. The coefficients explain the increase or decrease in attractiveness of the subjects. This further leads to a conclusion that olfactory attractiveness is just one of the many ways to explain attraction in mates. Studies have illustrated that characteristics like waist to hip ratio on women and the ability to provide resources in men, along with several other characteristics can also explain attraction in mates. Tingley et al further explain that olfactory attraction is something that is subconscious. Humans don't necessarily set out to smell each other in order to decide whether they're attracted to one another. Rather, our olfactory senses, connected with the parts of our brain that generate emotions, subconsciously tell us that we are interested in someone, and we tend to make those positive connections with members of the same ideology. The data and code used in this analysis replication is available on my github. ^[@github]
+# Abstract
+
+Tingley, McDermmott, and Hatemi (2014) find that olfactory senses could explain assortative mating by ideology. My replication of this paper succeeded except for minor discrepancies which do not affect his conclusions. Through my extension, I further evaluate the three models Tingley, McDermott, and Hatemi use by applying a bayesian framework instead of a regular linear model. I further use the sampled iterations created by `stan_lm` to graph density plots of the main coefficient being evaluated in the respective models. Through this framework, I confirm that Tingley's model illustrates little variability in their coefficients. The data and code used in this analysis replication is available on my github. ^[@github]
+
+
+# Introduction
+
+Have you ever wondered why dogs smell eachother upon meeting eachother? They use smell in deciding whether or not they like each other, and many more animals do this as well. Tingley, McDermmott, and Hatemi take this knowledge to study whether smell affects who we like based on our political ideologies. According to @Iyengar, in 2015, there was a spousal [political] agreement level of 81.5%. There are numerous factors that can attribute to such a high percentage like this, but Tingley, McDermmott, and Hatemi explore the connection to our sense of smell. In order to do so, they surveyed 146 participants asking them to rate the odor of anonymous targets who were either strong liberals or strong conservatives. With this data, they create three separate models. The models all regress the reported attractive rating on numerous variables. In the first model, they primarily focus on the coeficient explaining when the evaluator and the target shared ideologies. The second two models focus on the coefficient that measures the distance between ideology on a 7 point scale. This coeficient explains how a smaller or larger distance apart in ideology between the evaluator and target leads to different attractive ratings. The constant, or the intercept, in these models explain the predicted shift in attractiveness rating of the targets. Through these models, Tingley, McDermmott, and Hatemi observe that their hypotheses hold true even though there were small reported coefficient values. 
+
+For my replication, I use R software^[@R] to translate Tingely's, McDermmott's, and Hatemi's Stata code. Their code is available in the Harvard Dataverse here @Dataverse. As mentioned, the data and code used in this replication is available on my github^[@github]. My replication of this paper was successful except for a few minor differences. I successfully recreated the first two models, but had troubles including target and evaluator fixed effects in the third model. Not including the fixed effects left my model three looking slightly different than the original model. I was also unable to successfully cluster my standard errors on a specific evaluator variable, leaving small discrepancies in the standard errors for the entire table. Regardless of these minor details, my overall replication was a success. 
+
+My extension of the paper focused on further solidifying the significance on Tingley's, McDermmott's, and Hatemi's models. In order to do this, I applied a Bayesian framework to the linear models produced. This allowed me to use the sampled iterations that Bayesian models produce in order to evaluate the distributions of the main coefficients being explained. Interpreting these distributions gives a further understanding of the variability in these predicted values, which helps to explain the significance of the model. If there is little variability, then the model correctly explains the data and holds significance. Through my extension, I found that there was a very tight spread of all three main coefficients being evaluated, which proves that the models are significant. 
+
+# Literature and Paper Review
+
 
 
 ```{r, warning=FALSE, message=FALSE}
@@ -47,7 +62,7 @@ x <-
   mutate(mn_attractive_eval2 = mean(attractive))
 ``` 
 
-```{r}
+```{r, include=FALSE}
 graphic <-
   x %>%
   sample_n(21, replace = TRUE) %>%
@@ -60,7 +75,7 @@ graphic
 
 
 
-## Appendix
+# Appendix
 
 ```{r, results='asis'}
 model1 <-
@@ -75,20 +90,6 @@ model3 <-
 
 labs <- c("Same Ideology", "- Abs Ideology Diff.", "Same Sex", "Conservative Eval.", "Conservative Target","Ideology of Eval.", "Ideology of Target","Male Evaluator","Male Target","Avg. Target Attract","Avg. Eval. Attract")
 
-#cluster_se <- function(model, cluster){
-#  if(nrow(model.matrix(model))!=length(cluster)){
-#   stop("check your data: cluster variable has different N than model")}
-#  M <- length(unique(cluster))
-#  N <- length(cluster)          
-#  K <- model$rank  
-#  dfc <- (M/(M - 1)) * ((N - 1)/(N - K))
-#  uj  <- apply(estfun(model), 2, function(x) tapply(x, cluster, sum));
-#  rcse.cov <- dfc * sandwich(model, meat = crossprod(uj)/N)
-#  return(coeftest(model, vcov. = rcse.cov))
-#}
-
-#cluster_se(model1, x$ideval_n)
-
 stargazer(model1, model2, model3, header = FALSE, style = "ajps", type = "latex", omit.stat = c("rsq", "adj.rsq", "ser", "f"), title = "Odor Attraction as a Function of Ideological Similarity", intercept.bottom = T, dep.var.labels.include = F, digits = 4, covariate.labels = labs, dep.var.caption = "")
 
 
@@ -97,20 +98,16 @@ stargazer(model1, model2, model3, header = FALSE, style = "ajps", type = "latex"
 
 
 
-## Extension
+# Extension
 
-Pictured below is a graph of predicted outcomes from a posterior distribution of one model created by Tingley et al combined with the actual outcome data from the model. 
+Pictured below are individual graphs for each focused parameter in Tingley's three models. These graphs illustrate the distribution of those variables sampled from the model using `stan_lm`. 
 
-```{r Extension, include = FALSE}
+```{r Extension,include=FALSE}
 set.seed(02364)
 
 stan_fit1 <-
   stan_lm(attractive ~ same_ideology + same_gender + IdeoEvalBinary + IdeoTargetBinary + Male + MaleTarget +  mn_attractive + mn_attractive_eval2, data = x, prior = NULL)
 
-get_variables(stan_fit2)
-
-stan_fit1 %>% 
-  spread_draws(`(Intercept)`, same_ideologyTRUE)
 
 stan1_model <-
   stan_fit1 %>%
@@ -135,7 +132,15 @@ stan3_graphic <-
   spread_draws(ideodiffabs) %>% 
   ggplot(aes(y = .chain, x = ideodiffabs)) +
   stat_halfeyeh()
+
 ```
+
+```{r}
+stan1_model
+stan2_model
+stan3_graphic
+```
+
 
 Through this graph, we can see how well the data explains the outcome we are looking at in our model, which is the measure of attractiveness of the subjects. The dark blue line illustrates the actual outcomes of the model. As you can see, there is a lot of fluctuation between each value. This is because the observers only graded on a whole number scale. The peaks in each hump represent each value- there are 7 peaks that coordinate to each of the 'attractive' values. The faded blue line refers to the posterior iterations ran using pp_check that predicts outcomes using the information in our model. 
 
@@ -144,16 +149,6 @@ Through this graph we can confidently say that our model significantly explains 
 
 
 
-## Selected Bibliography + References:
+# Selected Bibliography + References:
 
-
-@AlfordJohn
-
-@Bereczkei
-
-@BlausteinAndrew
-
-@ByrneD
-
-@paper1
 
