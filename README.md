@@ -1,1 +1,3 @@
-# replication_1006
+# Assortative Mating Could Operate Through Olfactory Mechanisms Replication
+
+Tingley, McDermott, and Hatemi (2014) find that olfactory senses could explain assortative mating byideology. My replication of this paper succeeded except for minor discrepancies which do not affect hisconclusions. Through my extension, I further evaluate the three models Tingley, McDermott, and Hatemiuse by applying a Bayesian framework instead of a regular linear model. I further use the sampled iterationscreated bystan_lmto graph density plots of the main coefficient being evaluated in the respective models.Through this framework, I confirm that Tingley’s model illustrates little variability in their coefficients. Thedata and code used in this analysis replication is available on my github.
